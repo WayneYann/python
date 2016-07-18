@@ -6,7 +6,7 @@ is used to calculate the volume average temprature of the entire sphere.
 
 import numpy as np
 
-# Functions to Calculate Inner Sphere and Outer Shell Volumes
+# Functions to Calculate Inner Sphere and Subsequent Shell Volumes
 # -----------------------------------------------------------------------------
 
 def vol1(rad):
@@ -103,18 +103,27 @@ print('vR, surface shell volume is', vR)
 # Calculate Volume Average (Mean) Temperature of Entire Sphere
 # -----------------------------------------------------------------------------
 
-def Tvol(T, Vs):
+def Tvol(T, vol):
     """
     Use center sphere volume and shell volumes as weights to calculate the
     volume average temperature of entire sphere.
-    Parameters:
-    T = vector of temperatures at each node point, K
-    Vs = center and subsequent shell volumes in sphere, m^3
-    Returns:
+
+    Parameters
+    ----------
+    T = vector or array of temperatures at each node point, K
+    vol = vector for center and subsequent shell volumes in sphere, m^3
+
+    Returns
+    -------
     Tv = volume average temperature of sphere as a weighted mean, K
     """
-    Tavg = (T[:-1] + T[1:]) / 2 # average temperature between each node point
-    Tv = np.average(Tavg, weights=Vs)   # volume average weighted temperature
+    # calculation depends on dimensions of T as 1D vector or 2D array
+    if T.ndim == 1:
+        Tavg = (T[:-1] + T[1:]) / 2         # average temp between each node
+        Tv = np.average(Tavg, weights=vol)  # volume average weighted temp
+    if T.ndim == 2:
+        Tavg = (T[:, :-1] + T[:, 1:]) / 2
+        Tv = np.average(Tavg, axis=1, weights=vol)
     return Tv
 
 # parameters for calculating volume average temperature
@@ -128,17 +137,25 @@ dr = r/nr   # radius step as delta r, mm
 rads = np.linspace(dr, r, nr)   # array of each radius step, mm
 vols = vol3(rads)               # array of volumes from approach 3
 
-# list of temperatures at each node point within sphere
+# vector of temperatures at each node point within sphere
 T = np.array([273, 300, 340, 380, 460, 500, 550, 600, 660, 773])
 
-# volume average temperature based on weighted mean
-Tv_weight = Tvol(T, vols)
+Tv_weight = Tvol(T, vols)   # volume average temperature as a weighted mean
+Tv_mean = np.mean(T)    # volume average temperature calculated as a mean
 
-# volume average temperature calculated as mean
-Tv_mean = np.mean(T)
+# evaluate mean and weighted mean for 2-D temperature array
+T2 = np.array([[273, 300, 340, 380, 460, 500, 550, 600, 660, 773],
+               [400, 460, 510, 530, 600, 630, 670, 710, 790, 820]])
 
-# Print Temperature Results
+Tv_weight2 = Tvol(T2, vols)
+Tv_mean2 = np.mean(T2, axis=1)
+
+# Print Results
 # -----------------------------------------------------------------------------
 
 print('Tv as weighted mean is', Tv_weight)
 print('Tv as mean is', Tv_mean)
+
+print('Tv as weighted mean for 2-D array is', Tv_weight2)
+print('Tv as mean for 2-D array is', Tv_mean2)
+
