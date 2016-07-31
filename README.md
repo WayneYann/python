@@ -1,4 +1,7 @@
 # Python 
 
-Code examples of various concepts and features of the Python programming
-language as discussed on the [Tinkker.io](http://tinkker.io) website.
+Code example written in Python.
+
+The name of each file or folder relates to a particular topic. See the README
+within each folder or the comments in each file for more details.
+
