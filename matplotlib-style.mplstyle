@@ -1,0 +1,9 @@
+lines.linewidth : 2
+
+axes.grid : True
+axes.linewidth : 0
+
+xtick.major.width : 0
+ytick.major.width : 0
+
+grid.color : black
