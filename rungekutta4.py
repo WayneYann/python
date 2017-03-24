@@ -12,14 +12,14 @@ import matplotlib.pyplot as py
 # runge-kutta fourth-order method
 
 def integrate(F, x, y, xStop, h):
-    
+
     def run_kut4(F, x, y, h):
         K0 = h*F(x, y)
         K1 = h*F(x + h/2.0, y + K0/2.0)
         K2 = h*F(x + h/2.0, y + K1/2.0)
         K3 = h*F(x + h, y + K2)
         return (K0 + 2.0*K1 + 2.0*K2 + K3)/6.0
-        
+
     X = []
     Y = []
     X.append(x)
@@ -39,7 +39,7 @@ def F(x, y):
     F[0] = y[1]
     F[1] = -0.1*y[1]-x
     return F
-    
+
 x = 0.0
 xStop = 2.0
 y = np.array([0.0, 1.0])
@@ -67,11 +67,11 @@ py.grid()
 # runge-kutta fourth-order method
 
 def run_kut4(F, x, y, h):
-        K0 = h*F(x, y)
-        K1 = h*F(x + h/2.0, y + K0/2.0)
-        K2 = h*F(x + h/2.0, y + K1/2.0)
-        K3 = h*F(x + h, y + K2)
-        return (K0 + 2.0*K1 + 2.0*K2 + K3)/6.0
+    K0 = h*F(x, y)
+    K1 = h*F(x + h/2.0, y + K0/2.0)
+    K2 = h*F(x + h/2.0, y + K1/2.0)
+    K3 = h*F(x + h, y + K2)
+    return (K0 + 2.0*K1 + 2.0*K2 + K3)/6.0
 
 def rungekutta(F, x, y, h):    
     Y = []
@@ -87,7 +87,7 @@ def F(x, y):
     F[0] = y[1]
     F[1] = -0.1*y[1]-x
     return F
-    
+
 xi = 0.0
 xf = 2.0
 y = np.array([0.0, 1.0])
