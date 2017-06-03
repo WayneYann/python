@@ -82,3 +82,5 @@ plt.ylabel('Altitude (km)')
 ax = plt.gca()
 ax.get_xaxis().set_major_formatter(tkr.FuncFormatter(lambda x, p: format(int(x), ',')))
 
+# plt.savefig('/Users/gavin/Desktop/atmpressure.svg', bbox_inches='tight')
+
