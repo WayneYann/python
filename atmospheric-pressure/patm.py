@@ -1,74 +1,84 @@
 """
-Calculate atmospheric pressure at altitude.
+Calculate atmospheric pressure at altitude and plot for a range of heights.
+
+References:
+https://en.wikipedia.org/wiki/Barometric_formula
+https://www.eoas.ubc.ca/books/Practical_Meteorology/ starting on page 11
 """
 
+import matplotlib.pyplot as plt
+import matplotlib.ticker as tkr
 import numpy as np
 
+# Function
+# ------------------------------------------------------------------------------
 
-def standardtemperature(geopot_height):
+def pressure(alt):
     """
-    Standard temperature at elevation.
-    """
-    stdtemp = None  # initiate standard temperature variable
+    Atmospheric pressure at altitude.
+    
+    Parameters
+    ----------
+    alt = altitude or elevation above sea level, m
 
-    if geopot_height <= 11:
-        # Troposphere
-        stdtemp = 288.15 - (6.5 * geopot_height)
-    elif geopot_height <= 20:
-        # Stratosphere starts
-        stdtemp = 216.65
-    elif geopot_height <= 32:
-        stdtemp = 196.65 + geopot_height
-    elif geopot_height <= 47:
-        stdtemp = 228.65 + 2.8 * (geopot_height - 32)
-    elif geopot_height <= 51:
-        # Mesosphere starts
-        stdtemp = 270.65
-    elif geopot_height <= 71:
-        stdtemp = 270.65 - 2.8 * (geopot_height - 51)
-    elif geopot_height <= 84.85:
-        stdtemp = 214.65 - 2 * (geopot_height - 71)
+    Returns
+    -------
+    Patm = atmospheric pressure, Pa
+    """
+    alt = alt/1000              # convert altitude from meters to kilometers
+    Ro = 6356.766               # average radius of the Earth, km
+    H = (Ro * alt)/(Ro + alt)   # geopotential height, km
+
+    Patm = None     # initiate pressure variable
+
+    if H <= 11:
+        T = 288.15 - (6.5 * H)
+        Patm = 101325 * (288.15 / T) ** (-5.255877)
+    elif H <= 20:
+        T = 216.65
+        Patm = 22632 * np.exp(-0.1577 * (H - 11))
+    elif H <= 32:
+        T = 216.65 + (H - 20)
+        Patm = 5474.9 * (216.65 / T) ** (34.16319)
+    elif H <= 47:
+        T = 228.65 + 2.8 * (H - 32)
+        Patm = 868 * (228.65 / T) ** 12.2011
+    elif H <= 51:
+        T = 270.65
+        Patm = 110.9 * np.exp(-0.1262 * (H - 47))
     else:
-        raise ValueError('geopot_height must be less than 84.85 km')
+        raise ValueError('geopotential height must be less than 51 km')
 
-    return stdtemp
-
-
-def atmosphere(altitude):
-    """
-    Calculate atmospheric pressure at altitude.
-    See article at https://en.wikipedia.org/wiki/Barometric_formula
-    """
-    altitude = altitude / 1000  # convert altitude in m to km
-
-    earth_radius = 6356.766     # radius of the earth, km
-    geopot_height = (earth_radius * altitude) / (earth_radius + altitude)
-    t = standardtemperature(geopot_height)
-
-    atmpress = None     # initialize variable for atmospheric pressure
-
-    if geopot_height <= 11:
-        atmpress = 101325 * pow(288.15/t, -5.255877)
-    elif geopot_height <= 20:
-        atmpress = 22632.06 * np.exp(-0.1577 * (geopot_height - 11))
-    elif geopot_height <= 32:
-        atmpress = 5474.889 * pow(216.65/t, 34.16319)
-    elif geopot_height <= 47:
-        atmpress = 868.0187 * pow(228.65/t, 12.2011)
-    elif geopot_height <= 51:
-        atmpress = 110.9063 * np.exp(-0.1262 * (geopot_height - 47))
-    elif geopot_height <= 71:
-        atmpress = 66.93887 * pow(270.65/t, -12.2011)
-    elif geopot_height <= 84.85:
-        atmpress = 3.956420 * pow(214.65/t, -17.0816)
-    else:
-        raise ValueError('altitude must be less than 86 km')
-
-    return atmpress
+    # return atmospheric pressure at altitude, Pa
+    return Patm
 
 
-elev_golden = 1729.74   # elevation of Golden CO, m
-patm_golden = atmosphere(elev_golden)
+# Calculations
+# ------------------------------------------------------------------------------
 
-print('patm =', patm_golden, 'Pa')
+alt = 1729.74           # elevation of Golden CO in meters
+patm = pressure(alt)    # atmospheric pressure, Pa
+
+print('patm =', patm, 'Pa')
+
+# Plot
+# ------------------------------------------------------------------------------
+
+h = np.linspace(0, 51000)
+
+patm = []
+for a in h:
+    p = pressure(a)
+    patm.append(p)
+
+plt.ion()
+plt.close('all')
+plt.style.use('ggplot')
+
+plt.figure(1)
+plt.plot(patm, h/1000, lw=2)
+plt.xlabel('Pressure (Pa)')
+plt.ylabel('Altitude (km)')
+ax = plt.gca()
+ax.get_xaxis().set_major_formatter(tkr.FuncFormatter(lambda x, p: format(int(x), ',')))
 
