@@ -9,3 +9,7 @@ available at http://gavinw.me.
 
 **ipython_reload** - notes about the autoreload function of iPython
 
+**pickle**  
+Example of using the pickle module to save and load a class object. Run
+`main.py` for the example.
+
