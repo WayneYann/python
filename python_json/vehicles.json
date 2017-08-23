@@ -1,0 +1,29 @@
+{
+  "vehicles": [
+    {
+      "make": "Ford",
+      "model": "Mustang",
+      "year": 1979,
+      "miles": 131998
+    },
+    {
+      "make": "Chevy",
+      "model": "Tahoe",
+      "year": 2001,
+      "miles": 98101
+    },
+    {
+      "make": "Toyota",
+      "model": "Tacoma",
+      "year": 2008,
+      "miles": 208987
+    },
+    {
+      "make": "Ford",
+      "model": "Ranger",
+      "year": 2004,
+      "miles": 50321
+    }
+  ]
+}
+
