@@ -2,12 +2,14 @@
 Example import package from parent directory.
 """
 
-import os
+# add parent directory to python path
 import sys
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
+sys.path.append('..')
 
+# import the modules from the pack package
 import pack as pc
 
+# examples of using the modules
 car1 = pc.mt
 car2 = pc.cm
 
